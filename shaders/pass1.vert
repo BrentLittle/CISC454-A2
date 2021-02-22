@@ -30,14 +30,23 @@ void main()
   gl_Position = MVP * vec4( vertPosition, 1.0 );
 
   // Provide a colour 
-
-  colour = vec3(1.0,0.0,0.0);         // YOUR CODE HERE
+  // YOUR CODE HERE
+  colour = vec3( 0.33, 0.42, 0.18 );         
 
   // calculate normal in VCS
-
-  normal = vec3(0.0,1.0,0.0);         // YOUR CODE HERE
+  // YOUR CODE HERE
+  // To move the vertNormal into VCS we must apply the MV matrix to the normal.
+  normal = vec3( MV * vec4( vertNormal, 0.0 ) );         
 
   // Calculate the depth in [0,1]
-
-  depth = 0.5;                  // YOUR CODE HERE
+  // YOUR CODE HERE
+  
+  // We must divide out the last coordinate of our VCS position to get our point in NDCS. 
+  // this gives us points between -1 and +1
+  mediump vec3 NDCSvertPos = vec3(gl_Position.x / gl_Position.w, 
+                                  gl_Position.y / gl_Position.w, 
+                                  gl_Position.z / gl_Position.w);
+  
+  // to convert the depth (z coord) from the [-1, +1] range to [0,1] we must add 1 then divide by 2
+  depth = 0.5 * ( NDCSvertPos.z + 1 );                  
 }

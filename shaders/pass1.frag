@@ -19,7 +19,6 @@ layout (location = 2) out mediump vec3 fragDepth;
 // not have to modify this shader.
 
 void main()
-
 {
   fragColour = colour;
   fragNormal = normal;

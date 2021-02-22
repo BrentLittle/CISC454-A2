@@ -35,6 +35,25 @@ void main()
   float deltaX = texCoordInc.x;
   float deltaY = texCoordInc.y;
 
+  // Laplacian Summation
+  float lapSum = 0.0;
+  
+  //float startX = texCoords.x - deltaX;
+  //float startY = texCoords.y + deltaY;
+
+  
+  /*
+  for (int i = 0; i < 3; i++) {     // rows 
+    for (int j = 0; j < 3; j++) {   // cols
+      if( (i == 1) && (j == 1) )
+      {
+        lapSum += 8 *
+      }
+      
+    }
+  }
+  */
+
   // TOP ROW
   mediump vec2 TL = vec2( texCoords.x - deltaX, texCoords.y + deltaY );
   mediump vec2 TM = vec2( texCoords.x,          texCoords.y + deltaY );
@@ -50,6 +69,26 @@ void main()
   mediump vec2 BM = vec2( texCoords.x,          texCoords.y - deltaY );
   mediump vec2 BR = vec2( texCoords.x + deltaX, texCoords.y - deltaY );
 
+
+  mediump vec3 TLColour = texture( depthSampler, TL ).rgb;
+  mediump vec3 TMColour = texture( depthSampler, TM ).rgb;
+  mediump vec3 TRColour = texture( depthSampler, TR ).rgb;
+  mediump vec3 MLColour = texture( depthSampler, ML ).rgb;
+  mediump vec3 MMColour = texture( depthSampler, MM ).rgb;
+  mediump vec3 MRColour = texture( depthSampler, MR ).rgb;
+  mediump vec3 BLColour = texture( depthSampler, BL ).rgb;
+  mediump vec3 BMColour = texture( depthSampler, BM ).rgb;
+  mediump vec3 BRColour = texture( depthSampler, BL ).rgb;
+
+  lapSum =  -1 * TLColour.z +
+            -1 * TMColour.z +
+            -1 * TRColour.z +
+            -1 * MLColour.z +
+            8 * MMColour.z +
+            -1 * MRColour.z +
+            -1 * BLColour.z +
+            -1 * BMColour.z +
+            -1 * BRColour.z ;            
 
   fragLaplacian = vec3( 1.0, 1.0, 1.0 );
 }

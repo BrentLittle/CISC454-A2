@@ -23,6 +23,7 @@ void main()
   mediump vec2 dummy = texCoords;
 
   // YOUR CODE HERE.  
+
   // You will have to compute the Laplacian by evaluating a 3x3 filter kernel at the current texture coordinates.
   // The Laplacian weights of the 3x3 kernel are:
   //      -1  -1  -1

@@ -35,60 +35,49 @@ void main()
   float deltaX = texCoordInc.x;
   float deltaY = texCoordInc.y;
 
-  // Laplacian Summation
-  float lapSum = 0.0;
+  // Laplacian Sum
+  float lapSum = 0.0; 
   
-  //float startX = texCoords.x - deltaX;
-  //float startY = texCoords.y + deltaY;
-
   
-  /*
-  for (int i = 0; i < 3; i++) {     // rows 
-    for (int j = 0; j < 3; j++) {   // cols
-      if( (i == 1) && (j == 1) )
-      {
-        lapSum += 8 *
-      }
-      
-    }
-  }
-  */
+  mediump float TLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX, texCoords.y + deltaY ) ).rgb).z;
+  mediump float TMDepth = (texture( depthSampler, vec2( texCoords.x,          texCoords.y + deltaY ) ).rgb).z;
+  mediump float TRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX, texCoords.y + deltaY ) ).rgb).z;
+  mediump float MLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX,          texCoords.y ) ).rgb).z;
+  mediump float MMDepth = (texture( depthSampler, vec2( texCoords.x,                   texCoords.y ) ).rgb).z;
+  mediump float MRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX,          texCoords.y ) ).rgb).z;
+  mediump float BLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX, texCoords.y - deltaY ) ).rgb).z;
+  mediump float BMDepth = (texture( depthSampler, vec2( texCoords.x,          texCoords.y - deltaY ) ).rgb).z;
+  mediump float BRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX, texCoords.y - deltaY ) ).rgb).z;
 
-  // TOP ROW
-  mediump vec2 TL = vec2( texCoords.x - deltaX, texCoords.y + deltaY );
-  mediump vec2 TM = vec2( texCoords.x,          texCoords.y + deltaY );
-  mediump vec2 TR = vec2( texCoords.x + deltaX, texCoords.y + deltaY );
-  
-  // MIDDLE ROW
-  mediump vec2 ML = vec2( texCoords.x - deltaX, texCoords.y );
-  mediump vec2 MM = vec2( texCoords.x,          texCoords.y );
-  mediump vec2 MR = vec2( texCoords.x + deltaX, texCoords.y );
-  
-  // BOTTOM ROW
-  mediump vec2 BL = vec2( texCoords.x - deltaX, texCoords.y - deltaY );
-  mediump vec2 BM = vec2( texCoords.x,          texCoords.y - deltaY );
-  mediump vec2 BR = vec2( texCoords.x + deltaX, texCoords.y - deltaY );
-
-
-  mediump vec3 TLColour = texture( depthSampler, TL ).rgb;
-  mediump vec3 TMColour = texture( depthSampler, TM ).rgb;
-  mediump vec3 TRColour = texture( depthSampler, TR ).rgb;
-  mediump vec3 MLColour = texture( depthSampler, ML ).rgb;
-  mediump vec3 MMColour = texture( depthSampler, MM ).rgb;
-  mediump vec3 MRColour = texture( depthSampler, MR ).rgb;
-  mediump vec3 BLColour = texture( depthSampler, BL ).rgb;
-  mediump vec3 BMColour = texture( depthSampler, BM ).rgb;
-  mediump vec3 BRColour = texture( depthSampler, BL ).rgb;
-
-  lapSum =  -1 * TLColour.z +
-            -1 * TMColour.z +
-            -1 * TRColour.z +
-            -1 * MLColour.z +
-            8 * MMColour.z +
-            -1 * MRColour.z +
-            -1 * BLColour.z +
-            -1 * BMColour.z +
-            -1 * BRColour.z ;            
+  lapSum =  (-1 * TLDepth) + (-1 * TMDepth) + (-1 * TRDepth) +
+            (-1 * MLDepth) +  (8 * MMDepth) + (-1 * MRDepth) +
+            (-1 * BLDepth) + (-1 * BMDepth) + (-1 * BRDepth) ;
 
   fragLaplacian = vec3( lapSum );
 }
+
+  /* TRIED TO DO A FORLOOP TO CALCULATE LAPLACIAN
+  //mediump vec3 texDepth;
+  float currentX = texCoords.x - deltaX;
+  float currentY = texCoords.y + deltaY;
+  
+  for (int i = 0; i < 3; i++) 
+  { 
+    for (int j = 0; j < 3; j++) 
+    {
+      if( (i == 1) && (j == 1) )
+      {
+        mediump vec3 texDepth = texture( depthSampler, vec2( currentX, currentY ) ).rgb;
+        lapSum = lapSum + (8 * texDepth.z);
+      }
+      mediump vec3 texDepth = texture( depthSampler, vec2( currentX, currentY ) ).rgb;
+      lapSum = lapSum + (-1 * texDepth.z);
+      
+      currentX = currentX + deltaX;
+    }
+    currentX = texCoords.x - deltaX;
+    currentY = currentY - deltaY;
+  }
+  */
+
+

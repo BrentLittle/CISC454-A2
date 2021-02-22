@@ -15,8 +15,8 @@ layout (location = 0) out mediump vec3 fragColour;
 layout (location = 1) out mediump vec3 fragNormal;
 layout (location = 2) out mediump vec3 fragDepth;
 
-// Interpolated inputs as simply copied to the three outputs.  You do
-// not have to modify this shader.
+// Interpolated inputs as simply copied to the three outputs.  
+// You do not have to modify this shader.
 
 void main()
 {

@@ -90,5 +90,5 @@ void main()
             -1 * BMColour.z +
             -1 * BRColour.z ;            
 
-  fragLaplacian = vec3( 1.0, 1.0, 1.0 );
+  fragLaplacian = vec3( lapSum );
 }

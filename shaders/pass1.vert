@@ -43,10 +43,7 @@ void main()
   
   // We must divide out the last coordinate of our VCS position to get our point in NDCS. 
   // this gives us points between -1 and +1
-  mediump vec3 NDCSvertPos = vec3(gl_Position.x / gl_Position.w, 
-                                  gl_Position.y / gl_Position.w, 
-                                  gl_Position.z / gl_Position.w);
-  
-  // to convert the depth (z coord) from the [-1, +1] range to [0,1] we must add 1 then divide by 2
-  depth = 0.5 * ( NDCSvertPos.z + 1 );                  
+  float NDCSZposition = (gl_Position.z / gl_Position.w);
+  // to convert the depth (z'/w' coord) from the [-1, +1] range to [0,1] we must add 1 then divide by 2
+  depth = 0.5 * ( NDCSZposition + 1 );                  
 }

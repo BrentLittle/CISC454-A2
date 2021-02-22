@@ -12,9 +12,11 @@ layout (location = 0) in mediump vec3 vertPosition;
 layout (location = 1) in mediump vec3 vertNormal;
 layout (location = 2) in mediump vec3 vertTexCoord;
 
-// Your shader should compute the colour, normal (in the VCS), and
-// depth (in the range [0,1] with 0=near and 1=far) and store these
-// values in the corresponding variables.
+// Your shader should compute the 
+//    colour 
+//    normal (in the VCS)
+//    depth (in the range [0,1] with 0 = near and 1 = far) 
+// and store these values in the corresponding variables.
 
 out mediump vec3 colour;
 out mediump vec3 normal;

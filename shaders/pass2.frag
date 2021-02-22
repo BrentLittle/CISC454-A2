@@ -38,13 +38,15 @@ void main()
   // Laplacian Sum
   float lapSum = 0.0; 
   
-  
+  // TOP ROW
   mediump float TLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX, texCoords.y + deltaY ) ).rgb).z;
   mediump float TMDepth = (texture( depthSampler, vec2( texCoords.x,          texCoords.y + deltaY ) ).rgb).z;
   mediump float TRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX, texCoords.y + deltaY ) ).rgb).z;
+  // MIDDLE ROW
   mediump float MLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX,          texCoords.y ) ).rgb).z;
   mediump float MMDepth = (texture( depthSampler, vec2( texCoords.x,                   texCoords.y ) ).rgb).z;
   mediump float MRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX,          texCoords.y ) ).rgb).z;
+  // BOTTOM ROW
   mediump float BLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX, texCoords.y - deltaY ) ).rgb).z;
   mediump float BMDepth = (texture( depthSampler, vec2( texCoords.x,          texCoords.y - deltaY ) ).rgb).z;
   mediump float BRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX, texCoords.y - deltaY ) ).rgb).z;

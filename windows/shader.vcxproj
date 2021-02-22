@@ -16,6 +16,7 @@
     <ClCompile Include="..\src\glad\src\glad.c" />
     <ClCompile Include="..\src\gpuProgram.cpp" />
     <ClCompile Include="..\src\linalg.cpp" />
+    <ClCompile Include="..\src\pixelZoom.cpp" />
     <ClCompile Include="..\src\renderer.cpp" />
     <ClCompile Include="..\src\toon.cpp" />
     <ClCompile Include="..\src\wavefront.cpp" />
@@ -26,6 +27,7 @@
     <ClInclude Include="..\src\gpuProgram.h" />
     <ClInclude Include="..\src\headers.h" />
     <ClInclude Include="..\src\linalg.h" />
+    <ClInclude Include="..\src\pixelZoom.h" />
     <ClInclude Include="..\src\renderer.h" />
     <ClInclude Include="..\src\seq.h" />
     <ClInclude Include="..\src\shadeMode.h" />

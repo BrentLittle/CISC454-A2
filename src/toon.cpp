@@ -7,6 +7,7 @@
 #include "renderer.h"
 #include "gpuProgram.h"
 #include "font.h"
+#include "pixelZoom.h"
 
 
 GLFWwindow *window;
@@ -16,14 +17,17 @@ Renderer   *renderer; // class to do multipass rendering
 float theta = 0;
 bool sleeping = false;
 
-GLuint windowWidth = 600;
-GLuint windowHeight = 400;
+GLuint windowWidth = 1200;
+GLuint windowHeight = 800;
 float factor = 0;
 
 float fovy;
 vec3 eyePosition;
 
 bool isTorso = false; // for torso.obj model, which uses a different projection matrix
+bool showZoom = false;
+
+PixelZoom *pixelZoom = NULL; 
 
 
 
@@ -118,6 +122,17 @@ void display()
   renderer->makeStatusMessage( buffer );
 
   render_text( buffer, 10, 10, window );
+  // Show zoom at mouse
+
+  if (showZoom) {
+    if (pixelZoom == NULL)
+      pixelZoom = new PixelZoom();
+
+    double xpos, ypos;
+    glfwGetCursorPos( window, &xpos, &ypos );
+
+    pixelZoom->zoom( window, vec2( xpos, ypos ), vec2( windowWidth, windowHeight ) );
+  }
 }
 
 
@@ -182,8 +197,19 @@ void keyCallback( GLFWwindow* window, int key, int scancode, int action, int mod
 	   << "up    - move farther" << endl
 	   << "down  - move closer" << endl
 	   << "left  - zoom out" << endl
-	   << "right - zoom in" << endl;
+	   << "right - zoom in" << endl
+	   << "left mouse - show zoomed pixels" << endl;
     }
+}
+
+
+// Mouse callback
+
+void mouseButtonCallback( GLFWwindow* window, int button, int action, int mods )
+
+{
+  if (button == GLFW_MOUSE_BUTTON_LEFT)
+    showZoom = (action == GLFW_PRESS);
 }
 
 
@@ -248,11 +274,14 @@ int main( int argc, char **argv )
     return 1;
   }
 
+  glfwSetWindowPos( window, 0, 0 );
+
   glfwMakeContextCurrent( window );
   glfwSwapInterval( 1 );
   gladLoadGLLoader( (GLADloadproc) glfwGetProcAddress );
 
   glfwSetKeyCallback( window, keyCallback );
+  glfwSetMouseButtonCallback( window, mouseButtonCallback );
   glfwSetWindowSizeCallback( window, windowSizeCallback );
 
   // CWD is directory above

@@ -8,11 +8,9 @@
 
 uniform mediump vec3 lightDir;     // direction toward the light in the VCS
 uniform mediump vec2 texCoordInc;  // texture coord difference between adjacent texels
-
 in mediump vec2 texCoords;         // texture coordinates at this fragment
 
 // The following four textures are now available and can be sampled using 'texCoords'
-
 uniform sampler2D colourSampler;
 uniform sampler2D normalSampler;
 uniform sampler2D depthSampler;
@@ -29,7 +27,6 @@ void main()
   // Look up values for the depth and Laplacian.  
   // Use only the R component of the texture as texture( ... ).r
   // YOUR CODE HERE
-
   mediump float depth     = texture( depthSampler,     vec2( texCoords.x, texCoords.y ) ).r;
   mediump float laplacian = texture( laplacianSampler, vec2( texCoords.x, texCoords.y ) ).r;
 
@@ -37,14 +34,14 @@ void main()
   // Discard the fragment if it is a background pixel not near the silhouette of the object.
   // YOUR CODE HERE
   // with 0 being close and 1 being far we need to find if the fragment is at depth 1 
-  // but is also at least a certain distance from the silhouette as well
+  // but is also at least a certain distance from the silhouette as well.
+  // To discard a fragment we can use "discard;"
   
-
+  
   // [0 marks] 
   // Look up value for the colour and normal.  
   // Use the RGB components of the texture as texture( ... ).rgb or texture( ... ).xyz.
   // YOUR CODE HERE
-  
   mediump vec3 colour = texture( colourSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
   mediump vec3 normal = texture( normalSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
 
@@ -58,7 +55,8 @@ void main()
 
   const int numQuanta = 3;
   // YOUR CODE HERE
-
+  mediump float diffuseComponent = dot( normalize(normal), lightDir ); // N dot L
+  // Need to split the range of [.2,1] into numQuanta segments to apply the correct shading for that group of normals
 
 
   // [2 marks] 

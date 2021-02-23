@@ -31,7 +31,8 @@ void main()
 
   // Provide a colour 
   // YOUR CODE HERE
-  colour = vec3( 0.33, 0.42, 0.18 );         
+  colour = vec3( 0.33, 0.42, 0.18 ); 
+  //colour = vec3( 1, 0.0, 0.0 );         
 
   // calculate normal in VCS
   // YOUR CODE HERE

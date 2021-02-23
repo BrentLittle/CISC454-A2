@@ -49,14 +49,31 @@ void main()
   // Compute Cel shading, in which the diffusely shaded colour is quantized into four possible values.
   // Do not allow the diffuse component, N dot L, to be below 0.2.  
   // That will provide some ambient shading.  
-  // Your code should use the 'numQuata' below to have that many divisions of quanta of colour.  
+  // Your code should use the 'numQuanta' below to have that many divisions of quanta of colour.  
   // Do not use '3' in your code; use 'numQuanta'.  
   // Your code should be very efficient.
 
   const int numQuanta = 3;
   // YOUR CODE HERE
-  mediump float diffuseComponent = dot( normalize(normal), lightDir ); // N dot L
+  mediump float diffComp = dot( normalize(normal), lightDir ); // N dot L
   // Need to split the range of [.2,1] into numQuanta segments to apply the correct shading for that group of normals
+  mediump float segSize = .8 / numQuanta;
+
+  if( diffComp < 0.2 ) 
+  { // if the diff comp is less than .2 make the colour equal to .2 the amount it is currently
+    outputColour = 0.2 * vec4( colour, 1.0 );
+  }
+  else
+  {
+    for (int i = 0; i < numQuanta; i++) 
+    { // from the .2 range onward we must check numQuanta ranges that are segmentSize large
+      if (( diffComp >= (0.2 + ( i * segSize ))) && ( diffComp < (.2 + (( i + 1 ) * segSize ))))
+      {
+        outputColour = (0.2 + (( i + 2 ) * segSize )) *  vec4( colour, 1.0 );
+      }
+    }
+  }
+
 
 
   // [2 marks] 
@@ -90,6 +107,6 @@ void main()
   // YOUR CODE HERE
 
 
-
-  outputColour = vec4( 1.0, 0.0, 1.0, 1.0 );
+  outputColour = outputColour;
+  //outputColour = vec4( 1.0, 0.0, 1.0, 1.0 );
 }

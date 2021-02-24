@@ -36,7 +36,9 @@ void main()
   // with 0 being close and 1 being far we need to find if the fragment is at depth 1 
   // but is also at least a certain distance from the silhouette as well.
   // To discard a fragment we can use "discard;"
-  
+  if ( (depth == 1.0) && (laplacian == 0.0) ){
+    discard;
+  }
   
   // [0 marks] 
   // Look up value for the colour and normal.  

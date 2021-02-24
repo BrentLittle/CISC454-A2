@@ -45,7 +45,7 @@ void main()
   mediump vec3 colour = texture( colourSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
   mediump vec3 normal = texture( normalSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
 
-  // [2 marks] 
+  // [2 marks]
   // Compute Cel shading, in which the diffusely shaded colour is quantized into four possible values.
   // Do not allow the diffuse component, N dot L, to be below 0.2.  
   // That will provide some ambient shading.  
@@ -56,24 +56,17 @@ void main()
   const int numQuanta = 3;
   // YOUR CODE HERE
   mediump float diffComp = dot( normalize(normal), lightDir ); // N dot L
-  // Need to split the range of [.2,1] into numQuanta segments to apply the correct shading for that group of normals
-  mediump float segSize = .8 / numQuanta;
-
-  if( diffComp < 0.2 ) 
-  { // if the diff comp is less than .2 make the colour equal to .2 the amount it is currently
+  mediump float segSize = 1.0/numQuanta;
+  
+  for (int i = 0; i < numQuanta; i++) { 
+    if (( diffComp > ( i * segSize )) && ( diffComp <= (( i+1 ) * segSize ))){
+      outputColour = (( i+1 ) * segSize ) *  vec4( colour, 1.0 );
+      break;
+    } 
+  }
+  if( diffComp < 0.2 ){
     outputColour = 0.2 * vec4( colour, 1.0 );
   }
-  else
-  {
-    for (int i = 0; i < numQuanta; i++) 
-    { // from the .2 range onward we must check numQuanta ranges that are segmentSize large
-      if (( diffComp >= (0.2 + ( i * segSize ))) && ( diffComp < (.2 + (( i + 1 ) * segSize ))))
-      {
-        outputColour = (0.2 + (( i + 2 ) * segSize )) *  vec4( colour, 1.0 );
-      }
-    }
-  }
-
 
 
   // [2 marks] 

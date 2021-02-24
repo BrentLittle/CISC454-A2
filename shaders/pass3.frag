@@ -53,7 +53,7 @@ void main()
   // Do not use '3' in your code; use 'numQuanta'.  
   // Your code should be very efficient.
 
-  const int numQuanta = 6;
+  const int numQuanta = 3;
   // YOUR CODE HERE
   mediump float diffComp = dot( normalize(normal), lightDir ); // NdotL
   mediump float segSize = 1.0/numQuanta;

@@ -53,18 +53,21 @@ void main()
   // Do not use '3' in your code; use 'numQuanta'.  
   // Your code should be very efficient.
 
-  const int numQuanta = 3;
+  const int numQuanta = 6;
   // YOUR CODE HERE
-  mediump float diffComp = dot( normalize(normal), lightDir ); // N dot L
+  mediump float diffComp = dot( normalize(normal), lightDir ); // NdotL
   mediump float segSize = 1.0/numQuanta;
   
   for (int i = 0; i < numQuanta; i++) { 
-    if (( diffComp > ( i * segSize )) && ( diffComp <= (( i+1 ) * segSize ))){
-      outputColour = (( i+1 ) * segSize ) *  vec4( colour, 1.0 );
+    if (( diffComp > ( i * segSize )) && ( diffComp <= ( (i+1) * segSize ))){
+      outputColour = ( (i+1) * segSize ) *  vec4( colour, 1.0 );
       break;
     } 
   }
-  if( diffComp < 0.2 ){
+  if( (diffComp <= 0.2) && (segSize >= 0.2) ){
+    outputColour = segSize * vec4( colour, 1.0 );
+  }
+  else if ( (diffComp <= 0.2) && (segSize <= 0.2) ){
     outputColour = 0.2 * vec4( colour, 1.0 );
   }
 

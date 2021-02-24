@@ -31,8 +31,7 @@ void main()
 
   // Provide a colour 
   // YOUR CODE HERE
-  // used color picker on mac to collect these values of rotating teapot.
-  colour = vec3( 0.52, 0.76, 0.29 );         
+  colour = vec3( 0.66, 0.84, 0.36 );         
 
   // calculate normal in VCS
   // YOUR CODE HERE

@@ -27,6 +27,7 @@ void main()
   // Look up values for the depth and Laplacian.  
   // Use only the R component of the texture as texture( ... ).r
   // YOUR CODE HERE
+  
   mediump float depth     = texture( depthSampler,     vec2( texCoords.x, texCoords.y ) ).r;
   mediump float laplacian = texture( laplacianSampler, vec2( texCoords.x, texCoords.y ) ).r;
 
@@ -39,6 +40,7 @@ void main()
   // Look up value for the colour and normal.  
   // Use the RGB components of the texture as texture( ... ).rgb or texture( ... ).xyz.
   // YOUR CODE HERE
+  
   mediump vec3 colour = texture( colourSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
   mediump vec3 normal = texture( normalSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
 
@@ -52,15 +54,17 @@ void main()
 
   const int numQuanta = 3;
   // YOUR CODE HERE
+  
   mediump float diffComp = dot( normalize(normal), lightDir ); // NdotL
-  mediump float segSize = 1.0/numQuanta;
+  mediump float segSize = 1.0 / numQuanta;
   
   // find what of the numQuanta classifications the diffuse component will fall within
   for (int i = 0; i < numQuanta; i++) { 
     
     if (( diffComp > ( i * segSize )) && ( diffComp <= ( (i+1) * segSize ))){
-      
+      // make the output colour based on the classification the diffuse component falls in.
       outputColour = ( (i+1) * segSize ) *  vec4( colour, 1 );
+      // break out of the loop as we have found the correct classification and there is no point to check the others
       break;
     
     } 
@@ -96,48 +100,43 @@ void main()
   
   // We need to search a grid that is (2*KernelRadius)+1 x (2*KernelRadius)+1 
   mediump float neighbourhoodSize = ( 2 * kernelRadius ) + 1;
-  
-  // Changes that must be made to move in the X and Y directions
-  mediump float deltaX = texCoordInc.x;
-  mediump float deltaY = texCoordInc.y;
+  // the maximum distance a fragment can be from the current fragment in the neightbourhood
+  mediump float maxDistance = sqrt( ((kernelRadius*texCoordInc.x)*(kernelRadius*texCoordInc.x)) +
+                                    ((kernelRadius*texCoordInc.y)*(kernelRadius*texCoordInc.y)) ); 
 
   // Coordinates of the top left fragment in the neighbourhood
-  mediump float startX = texCoords.x - (kernelRadius*deltaX);
-  mediump float startY = texCoords.y + (kernelRadius*deltaX);
+  mediump float startX = texCoords.x - (kernelRadius*texCoordInc.x);
+  mediump float startY = texCoords.y + (kernelRadius*texCoordInc.y);
 
   // Keep track of the closest fragment that has a laplacian 
-  mediump float closestDist = neighbourhoodSize;
-  //mediump float closestLapFragX = 0.0;
-  //mediump float closestLapFragY = 0.0;
+  mediump float closestDist = maxDistance;
 
+  // Variables to hold the laplacian of the fragment we are checking
   mediump float laplacianVal = 0;
+  // variable to hold the distance to the fragment we are checking
   mediump float currDist = 0;
-  // Loop to find the fragment that has a laplacian less than the threshold and is closest to the current fragment in the neighbourhood
+  
+  // Loop will find the fragment that has a laplacian less than the threshold and is closest to the current fragment in the neighbourhood
   // If there is no fragment in the neighbourhood that has a laplacian less than the threshold,
   // closestDist will still be equal to neighbourhoodSize as the distance to an edge pixel IF found will be much less than neighbourhoodSize
-  for( float y = startY; y > startY - (neighbourhoodSize * deltaY); y -= deltaY){    // Cycle through the rows
-    for( float x = startX; x < startX + (neighbourhoodSize * deltaX); x += deltaX){  // Cycle through each column in that row
-      
+  
+  for( float y = startY; y > startY - (neighbourhoodSize * texCoordInc.y); y -= texCoordInc.y){    // Cycle through the rows
+    for( float x = startX; x < startX + (neighbourhoodSize * texCoordInc.x); x += texCoordInc.x){  // Cycle through each column in that row
       laplacianVal = texture( laplacianSampler, vec2( x, y ) ).r;
       
       if(laplacianVal < threshold){ 
         // We have found one of our silhouette fragments NOW Find the distance to it
         currDist = sqrt( ((x-texCoords.x) * (x-texCoords.x)) + ((y-texCoords.y) * (y-texCoords.y)) );
 
-        if(currDist < closestDist){ // if the distance to this silhouette fragment is less than any distance seen before: keep track of this fragment
-
+        if(currDist < closestDist){ 
+          // if the distance to this silhouette fragment is less than any distance seen before: keep track of this fragment
           closestDist = currDist;
-          //closestLapFragX = x;
-          //closestLapFragY = y;
-
         }
       }
     }
   }
 
-  mediump float maxDistance = sqrt( ((kernelRadius*texCoordInc.x)*(kernelRadius*texCoordInc.x)) +
-                                    ((kernelRadius*texCoordInc.y)*(kernelRadius*texCoordInc.y)) ); 
-
+  // variable to hold our blending factor
   mediump float blendFactor = closestDist / maxDistance;
 
   // now that we have found the distance to a silhouette pixel we can check to see how far it is.
@@ -154,17 +153,19 @@ void main()
   // Phong colour as distance from the edge increases.  
   // If these is no edge in the neighbourhood, output the cel-shaded colour.  
   // YOUR CODE HERE
-  mediump vec3 grayColour = blendFactor * vec3(1.0);
+  
+  mediump vec3 greyColour = blendFactor * vec3(1.0);
 
-  if(closestDist == neighbourhoodSize){
+  if(closestDist == maxDistance){
     // No edge fragment was found in the neighbourhood search so we output the original colour that the pixel is to be
     outputColour = outputColour;
   }
-  else if(laplacian < threshold){ // The current fragment IS an edge fragment so output black
-    outputColour = vec4(0,0,0,1);
+  else if(laplacian < threshold){ 
+    // The current fragment IS an edge fragment so output black
+    outputColour = vec4( 0, 0, 0, 1 );
   }
-  else{ // an edge fragment was found in the neighbourhood search so apply a scaling based on distance
-    outputColour = outputColour * vec4(grayColour,1.0);
+  else{ 
+    // an edge fragment was found in the neighbourhood search so apply a scaling based on distance
+    outputColour = outputColour * vec4( greyColour,1.0 );
   }
-  //outputColour = vec4( 1.0, 0.0, 1.0, 1.0 );
 }

@@ -35,17 +35,19 @@ void main()
   float deltaX = texCoordInc.x;
   float deltaY = texCoordInc.y;
 
-  // Laplacian Sum
+  // Laplacian Sum for our fragment
   float lapSum = 0.0; 
   
   // TOP ROW
   mediump float TLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX, texCoords.y + deltaY ) ).rgb).z;
   mediump float TMDepth = (texture( depthSampler, vec2( texCoords.x,          texCoords.y + deltaY ) ).rgb).z;
   mediump float TRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX, texCoords.y + deltaY ) ).rgb).z;
+  
   // MIDDLE ROW
   mediump float MLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX,          texCoords.y ) ).rgb).z;
   mediump float MMDepth = (texture( depthSampler, vec2( texCoords.x,                   texCoords.y ) ).rgb).z;
   mediump float MRDepth = (texture( depthSampler, vec2( texCoords.x + deltaX,          texCoords.y ) ).rgb).z;
+  
   // BOTTOM ROW
   mediump float BLDepth = (texture( depthSampler, vec2( texCoords.x - deltaX, texCoords.y - deltaY ) ).rgb).z;
   mediump float BMDepth = (texture( depthSampler, vec2( texCoords.x,          texCoords.y - deltaY ) ).rgb).z;
@@ -55,34 +57,7 @@ void main()
             (-1 * MLDepth) +  (8 * MMDepth) + (-1 * MRDepth) +
             (-1 * BLDepth) + (-1 * BMDepth) + (-1 * BRDepth) ;
 
-  // As this laplacian matrix is taking the 2nd Spatial derivative the:
-  // Laplacian will be positive on the darker (closer) side of the edge and the
-  // Laplacian will be negative on the lighter (further) side of the edge
   fragLaplacian = vec3( lapSum );
 }
-
-  /* TRIED TO DO A FORLOOP TO CALCULATE LAPLACIAN
-  //mediump vec3 texDepth;
-  float currentX = texCoords.x - deltaX;
-  float currentY = texCoords.y + deltaY;
-  
-  for (int i = 0; i < 3; i++) 
-  { 
-    for (int j = 0; j < 3; j++) 
-    {
-      if( (i == 1) && (j == 1) )
-      {
-        mediump vec3 texDepth = texture( depthSampler, vec2( currentX, currentY ) ).rgb;
-        lapSum = lapSum + (8 * texDepth.z);
-      }
-      mediump vec3 texDepth = texture( depthSampler, vec2( currentX, currentY ) ).rgb;
-      lapSum = lapSum + (-1 * texDepth.z);
-      
-      currentX = currentX + deltaX;
-    }
-    currentX = texCoords.x - deltaX;
-    currentY = currentY - deltaY;
-  }
-  */
 
 

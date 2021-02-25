@@ -16,6 +16,7 @@ void main()
   // You have to map this to the range [0,1] of texture coordinates.
   
   // YOUR CODE HERE
+  
   // texCoords is simply a linear mapping from [-1,1] to [0,1] for both the X and Y components of the coordinate.
   // we can take the vertPosition add 1 and then divide by 2 to get the correct texCoord.
   float texCoordXPos = 0.5 * ( vertPosition.x + 1 );

@@ -36,6 +36,7 @@ void main()
   // with 0 being close and 1 being far we need to find if the fragment is at depth 1 
   // but is also at least a certain distance from the silhouette as well.
   // To discard a fragment we can use "discard;"
+  
   if ( (depth == 1.0) && (laplacian == 0.0) ){
     discard;
   }
@@ -75,7 +76,7 @@ void main()
 
 
   // [2 marks] 
-  // Look at the fragments in the 3x3 neighbourhood of this fragment.  
+  // Look at the fragments in the kernelRadius x kernelRadius neighbourhood of this fragment.  
   // Your code should use the 'kernelRadius' below and check all fragments in the range
   //
   //    [-kernelRadius,+kernelRadius] x [-kernelRadius,+kernelRadius]
@@ -92,19 +93,44 @@ void main()
   const mediump float kernelRadius = 3.0;
   const mediump float threshold = -0.1;
   // YOUR CODE HERE
+  
   // We need to search a grid that is (2*KernelRadius)+1 x (2*KernelRadius)+1 
-  const mediump float neighbourhoodSize = ( 2 * kernelRadius ) + 1;
+  mediump float neighbourhoodSize = ( 2 * kernelRadius ) + 1;
+  
+  // Changes that must be made to move in the X and Y directions
+  mediump float deltaX = texCoordInc.x;
+  mediump float deltaY = texCoordInc.y;
+
+  // Coordinates of the top left fragment in the neighbourhood
+  mediump float startX = texCoords.x - (kernelRadius*deltaX);
+  mediump float startY = texCoords.y + (kernelRadius*deltaX);
+
+  // Keep track of the closest fragment that has a laplacian 
+  mediump float closestDist = neighbourhoodSize;
+  mediump float closestLapFragX = 0.0;
+  mediump float closestLapFragY = 0.0;
+
+  mediump float laplacianVal = 0.0;
+  // Loop to find the fragment that has a laplacian less than the threshold and is closest to the current fragment in the neighbourhood
+  // If there is no fragment in the neighbourhood that has a laplacian less than the threshold,
+  // closestDist will still be equal to neighbourhoodSize
+  for( float y = startY; y > startY - (neighbourhoodSize * deltaY); y -= deltaY){    // Cycle through the rows
+    for( float x = startX; x < startX + (neighbourhoodSize * deltaX); x += deltaX){  // Cycle through each column in each row
+      
+    }
+  }
 
 
 
   // [1 mark] 
   // Output the fragment colour.  
-  // If there is an edge fragment in the 3x3 neighbourhood of this fragment, output a grey colour based on the 
-  // blending factor.  
+  // If there is an edge fragment in the kernelRadius x kernelRadius neighbourhood of this fragment, 
+  // output a grey colour based on the blending factor.  
   // The grey should be completely black for an edge fragment, and should blend to the
   // Phong colour as distance from the edge increases.  
   // If these is no edge in the neighbourhood, output the cel-shaded colour.  
   // YOUR CODE HERE
+  
   if(threshold > laplacian){
     outputColour = vec4(0.0,0.0,0.0,1.0);
   }

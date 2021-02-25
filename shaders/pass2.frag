@@ -55,6 +55,9 @@ void main()
             (-1 * MLDepth) +  (8 * MMDepth) + (-1 * MRDepth) +
             (-1 * BLDepth) + (-1 * BMDepth) + (-1 * BRDepth) ;
 
+  // As this laplacian matrix is taking the 2nd Spatial derivative the:
+  // Laplacian will be positive on the darker (closer) side of the edge and the
+  // Laplacian will be negative on the lighter (further) side of the edge
   fragLaplacian = vec3( lapSum );
 }
 

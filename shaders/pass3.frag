@@ -48,7 +48,7 @@ void main()
   mediump vec3 normal = texture( normalSampler, vec2( texCoords.x, texCoords.y ) ).rgb;
 
   // [2 marks]
-  // Compute Cel shading, in which the diffusely shaded colour is quantized into four possible values.
+  // Compute Cel shading, in which the diffusely shaded colour is quantized into NumQuanta possible values.
   // Do not allow the diffuse component, N dot L, to be below 0.2.  
   // That will provide some ambient shading.  
   // Your code should use the 'numQuanta' below to have that many divisions of quanta of colour.  
@@ -92,6 +92,8 @@ void main()
   const mediump float kernelRadius = 3.0;
   const mediump float threshold = -0.1;
   // YOUR CODE HERE
+  // We need to search a grid that is (2*KernelRadius)+1 x (2*KernelRadius)+1 
+  const mediump float neighbourhoodSize = ( 2 * kernelRadius ) + 1;
 
 
 
@@ -103,7 +105,9 @@ void main()
   // Phong colour as distance from the edge increases.  
   // If these is no edge in the neighbourhood, output the cel-shaded colour.  
   // YOUR CODE HERE
-
+  if(threshold > laplacian){
+    outputColour = vec4(0.0,0.0,0.0,1.0);
+  }
 
   outputColour = outputColour;
   //outputColour = vec4( 1.0, 0.0, 1.0, 1.0 );
